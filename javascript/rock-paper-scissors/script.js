@@ -14,8 +14,6 @@ Functions:
 let humanScore = 0
 let computerScore = 0
 
-playGame()
-
 function getComputerChoice() {
     let random_num = Math.random()
 
@@ -26,12 +24,6 @@ function getComputerChoice() {
     } else {
         return "scissors"
     }
-
-}
-
-function getHumanChoice() {
-    let choice = prompt("Enter rock, paper, or scissors")
-    return choice.toLowerCase()
 
 }
 
@@ -47,18 +39,35 @@ function compareChoices(computerChoice, humanChoice) {
     }
 }
 
-function playRound() {
-    let human = getHumanChoice()
+function playRound(event) {
+
+    if (humanScore >= 5 && computerScore >= 5) {
+        return
+    }
+
+    if (event.target.tagName !== "BUTTON") {
+        return
+    }
+
     let computer = getComputerChoice()
+    let human = event.target.textContent.toLowerCase()
 
     let winner = compareChoices(computer, human)
-
-    console.log(`${winner} wins! Score: human=${humanScore}, computer=${computerScore}`)
-
+    displayScore(winner)
 }
 
-function playGame() {
-    for (let i=0; i < 5; i++){
-        playRound()
+function displayScore(winner) {
+    let score_div = document.querySelector(".score")
+    let score_announcement = document.createElement("p")
+    let score_text = `${winner} wins this round. Score: human=${humanScore}, computer=${computerScore}`
+
+    if (humanScore == 5 || computerScore == 5) {
+        score_text = `Game over: ${winner} wins! Final Score: human=${humanScore}, computer=${computerScore}`
     }
+
+    score_announcement.textContent = score_text
+    score_div.appendChild(score_announcement)
 }
+
+let buttons_div = document.querySelector(".buttons")
+buttons_div.addEventListener('click', playRound)
